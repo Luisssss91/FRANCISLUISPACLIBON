@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hi, I'm – Francis Luis Paclibon</title>
+  <meta name="description" content="A clean, responsive single‑page portfolio demo built with pure HTML, CSS, and a sprinkle of JavaScript." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d10;         /* dark */
+      --bg-soft: #12161b;
+      --text: #e8eef5;
+      --muted: #9fb0c3;
+      --brand: #7c5cff;      /* accent */
+      --brand-2: #00e3a2;    /* accent 2 */
+      --card: #0f1318;
+      --ring: rgba(124, 92, 255, .35);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    /* Light theme (toggled by JS) */
+    .light {
+      --bg: #f8fafc;
+      --bg-soft: #ffffff;
+      --text: #0b1220;
+      --muted: #5a6b82;
+      --card: #ffffff;
+      --ring: rgba(124,92,255,.25);
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(124,92,255,.15), transparent 60%),
+                  radial-gradient(900px 500px at -10% 20%, rgba(0,227,162,.12), transparent 55%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Layout helpers */
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+    .btn { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid rgba(255,255,255,.1); padding: .8rem 1rem; border-radius: 14px; transition: .2s ease; backdrop-filter: blur(4px); }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); border-color: rgba(255,255,255,.18); }
+    .btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #0b0d10; font-weight: 700; border: none; }
+    .tag { font-size: .8rem; padding: .25rem .6rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); color: var(--muted); }
+    .grid { display: grid; gap: 1.2rem; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(10,12,16,.7), rgba(10,12,16,.35));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: .9rem 0; }
+    .logo { display: inline-flex; align-items: center; gap: .6rem; font-weight: 800; letter-spacing: .2px; }
+    .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: 0 0 0 4px var(--ring); }
+    nav ul { list-style: none; display: flex; gap: 1rem; padding: 0; margin: 0; }
+    nav a { padding: .5rem .7rem; border-radius: 10px; color: var(--muted); }
+    nav a:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .theme { border: 1px solid rgba(255,255,255,.12); background: transparent; color: var(--text); border-radius: 12px; padding: .55rem .75rem; cursor: pointer; }
+
+    /* Hero */
+    #hero { padding: 6rem 0 3rem; }
+    .hero-wrap { display: grid; gap: 2rem; grid-template-columns: 1.2fr .8fr; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: .5rem; margin-bottom: .6rem; color: var(--muted); }
+    .eyebrow svg { width: 18px; height: 18px; }
+    h1 { font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.1; margin: .2rem 0 .6rem; }
+    .lead { font-size: clamp(1rem, 2.3vw, 1.15rem); color: var(--muted); }
+    .cta { margin-top: 1.2rem; display: flex; gap: .7rem; flex-wrap: wrap; }
+    .portrait { justify-self: end; width: min(320px, 90%); aspect-ratio: 1/1; border-radius: 24px; background: conic-gradient(from 180deg at 50% 50%, rgba(124,92,255,.25), rgba(0,227,162,.25), transparent 60%), linear-gradient(180deg, var(--card), var(--card)); padding: 10px; box-shadow: var(--shadow); }
+    .portrait-inner { width: 100%; height: 100%; border-radius: 18px; background:
+      radial-gradient(80px 80px at 20% 20%, rgba(255,255,255,.08), transparent),
+      radial-gradient(100px 100px at 80% 70%, rgba(255,255,255,.04), transparent),
+      linear-gradient(180deg, #1a1f27, #141821);
+      display: grid; place-items: center; color: #c9d6e5; font-weight: 700;
+    }
+
+    /* Section titles */
+    section { padding: 3.5rem 0; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; margin-bottom: 1.5rem; }
+    .section-head h2 { margin: 0; font-size: clamp(1.4rem, 3.5vw, 2rem); }
+    .section-head p { margin: 0; color: var(--muted); }
+
+    /* About */
+    .about { background: linear-gradient(180deg, rgba(255,255,255,.02), transparent 30%); border: 1px solid rgba(255,255,255,.06); border-radius: 18px; padding: 1.2rem; }
+
+    /* Projects */
+    .projects { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card { background: var(--card); border: 1px solid rgba(255,255,255,.07); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); display: grid; }
+    .thumb { aspect-ratio: 16/10; background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(0,227,162,.18)); display: grid; place-items: center; color: #0b0d10; font-weight: 800; letter-spacing: .4px; }
+    .thumb small { background: rgba(255,255,255,.85); border-radius: 10px; padding: .35rem .6rem; }
+    .card-body { padding: 1rem; display: grid; gap: .6rem; }
+    .card-body p { color: var(--muted); margin: 0; }
+    .meta { display: flex; gap: .4rem; flex-wrap: wrap; }
+
+    /* Skills */
+    .skills { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .skill { background: var(--card); border: 1px solid rgba(255,255,255,.07); border-radius: 16px; padding: 1rem; }
+    .bar { height: 8px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; margin-top: .6rem; }
+    .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); width: var(--val, 60%); }
+
+    /* Contact */
+    form { display: grid; gap: .8rem; }
+    input, textarea { width: 100%; padding: .85rem 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); color: var(--text); }
+    textarea { min-height: 120px; resize: vertical; }
+
+    /* Footer */
+    footer { padding: 2rem 0; color: var(--muted); border-top: 1px solid rgba(255,255,255,.06); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-wrap { grid-template-columns: 1fr; }
+      .portrait { justify-self: start; order: -1; }
+      nav ul { display: none; }
+      .menu-btn { display: inline-flex; }
+    }
+    .menu-btn { display: none; border: 1px solid rgba(255,255,255,.12); padding: .45rem .6rem; border-radius: 10px; background: transparent; color: var(--text); }
+    .mobile-nav { display: none; }
+    .mobile-nav.open { display: grid; gap: .6rem; padding: .6rem 0 1rem; }
+    .mobile-nav a { padding: .5rem; border-radius: 10px; color: var(--muted); }
+    .mobile-nav a:hover { background: rgba(255,255,255,.06); color: var(--text); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#hero" class="logo" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span>
+        <span>HI I'M,FRANCIS LUIS PACLIBON</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div style="display:flex; gap:.5rem; align-items:center;">
+        <button id="theme" class="theme" title="Toggle theme" aria-label="Toggle light/dark theme">☀️/🌙</button>
+        <button id="menu" class="menu-btn" aria-expanded="false" aria-controls="mobile-nav">Menu ▾</button>
+      </div>
+    </div>
+    <div id="mobile-nav" class="container mobile-nav" role="dialog" aria-modal="false">
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="hero" class="container">
+      <div class="hero-wrap">
+        <div>
+          <div class="eyebrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> Available for freelance</div>
+          <h1>Hello, I’m <span style="background:linear-gradient(90deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent;">Francis Luis Paclibon</span>, I build delightful web experiences.</h1>
+          <p class="lead">Front‑end developer with a passion for performance, accessibility, and tasteful motion. I turn ideas into responsive, production‑ready interfaces.</p>
+          <div class="cta">
+            <a class="btn primary" href="#projects">View Projects</a>
+            <a class="btn" href="#contact">Contact Me</a>
+            <span class="tag" aria-label="Years of experience">4+ yrs</span>
+          </div>
+        </div>
+        <div class="portrait" aria-hidden="true">
+  <div class="portrait-inner">
+    <img src="pransis.png" alt="Francis Luis Paclibon" style="border-radius: 18px; width: 100%; height: auto;">
+  </div>
+</div>
+
+
+    <!-- ABOUT -->
+    <section id="about" class="container">
+      <div class="section-head">
+        <h2>About</h2>
+        <p>Who I am & what I do</p>
+      </div>
+      <div class="about">
+        <p>I'm a developer based in <strong>Escalante City, Negros Occidental, Philippines</strong>. I specialize in building high‑quality, accessible websites and apps. I enjoy collaborating with designers, working with modern stacks, and shipping features that delight users.</p>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="container">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <p>Selected work</p>
+      </div>
+      <div class="grid projects">
+        <article class="card">
+          <div class="thumb"><small>Case Study • SaaS Dashboard</small></div>
+          <div class="card-body">
+            <h3>Pulse Analytics</h3>
+            <p>Interactive analytics dashboard featuring custom charts, role‑based access, and blazing‑fast filtering.</p>
+            <div class="meta">
+              <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span>
+            </div>
+            <p><a href="#" class="btn" aria-label="View Pulse Analytics project">Live Demo</a></p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="thumb"><small>Open Source • Component Library</small></div>
+          <div class="card-body">
+            <h3>FeatherKit UI</h3>
+            <p>A lightweight set of accessible UI components with zero dependencies and theming support.</p>
+            <div class="meta">
+              <span class="tag">Web Components</span><span class="tag">A11y</span>
+            </div>
+            <p><a href="#" class="btn" aria-label="View FeatherKit UI project">Repo</a></p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="thumb"><small>Client • Marketing Site</small></div>
+          <div class="card-body">
+            <h3>Waves Studio</h3>
+            <p>Marketing website with a CMS, smooth page transitions, and excellent Lighthouse scores.</p>
+            <div class="meta">
+              <span class="tag">SEO</span><span class="tag">Performance</span>
+            </div>
+            <p><a href="#" class="btn" aria-label="View Waves Studio project">Case Study</a></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="container">
+      <div class="section-head">
+        <h2>Skills</h2>
+        <p>Tech I use</p>
+      </div>
+      <div class="grid skills">
+        <div class="skill"><strong>HTML & Semantics</strong><div class="bar"><span style="--val: 95%"></span></div></div>
+        <div class="skill"><strong>CSS & Layout</strong><div class="bar"><span style="--val: 92%"></span></div></div>
+        <div class="skill"><strong>JavaScript</strong><div class="bar"><span style="--val: 88%"></span></div></div>
+        <div class="skill"><strong>Accessibility</strong><div class="bar"><span style="--val: 85%"></span></div></div>
+        <div class="skill"><strong>Performance</strong><div class="bar"><span style="--val: 86%"></span></div></div>
+        <div class="skill"><strong>UI/UX</strong><div class="bar"><span style="--val: 80%"></span></div></div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="container">
+      <div class="section-head">
+        <h2>Contact</h2>
+        <p>Let’s work together</p>
+      </div>
+      <div class="grid" style="grid-template-columns: 1.1fr .9fr; align-items: start;">
+        <div>
+          <form onsubmit="return sendMessage(event)">
+            <label>
+              <span class="tag">Name</span>
+              <input required name="name" placeholder="Francis Luis Paclibon" />
+            </label>
+            <label>
+              <span class="tag">Email</span>
+              <input required type="email" name="email" placeholder="francisluis129@gmail.com" />
+            </label>
+            <label>
+              <span class="tag">Message</span>
+              <textarea required name="message" placeholder="Hey! I’d love to build…"></textarea>
+            </label>
+            <button class="btn primary" type="submit">Send Message</button>
+            <p id="status" aria-live="polite" style="color: var(--muted);"></p>
+          </form>
+        </div>
+        <div class="about">
+          <p><strong>Email:</strong> <a href="mailto:hello@yourname.dev">francisluis129@gmail.com</a></p>
+          <p><strong>Location:</strong> Escalante City, Philippines</p>
+          <p><strong>Socials:</strong></p>
+          <p><strong>Instagram:</strong> ldashhhhh1</p>
+          <p><strong>Github:</strong> https://github.com/Luisssss91</p>
+          <p class="tag">Response time: within 24h</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+      <small>© <span id="year"></span> Francis Luis Paclibon. All rights reserved.</small>
+      <a href="#hero" class="btn" aria-label="Back to top">↑ Back to Top</a>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle with preference persistence
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('theme');
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light') document.body.classList.add('light');
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    });
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuBtn?.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+
+    // Contact form demo (no backend). Generates a mailto link.
+    function sendMessage(e) {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const name = data.get('name');
+      const email = data.get('email');
+      const message = data.get('message');
+      const subject = encodeURIComponent('Portfolio Inquiry from ' + name);
+      const body = encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
+      const mailto = `mailto:hello@yourname.dev?subject=${subject}&body=${body}`;
+      document.getElementById('status').textContent = 'Opening your mail app…';
+      window.location.href = mailto;
+      return false;
+    }
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
